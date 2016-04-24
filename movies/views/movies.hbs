@@ -1,0 +1,26 @@
+<form action="" method="get">
+	Director: <input type="text" id="director" name="director" value="{{director}}">	
+	<input id="filterBtn" type="submit" value="Filter">
+</form>
+
+{{#if director}}
+<p>
+Showing only movies directed by: <span class="highlight">{{director}}</span>
+</p>
+{{/if}}
+<table>
+	<thead>
+		<th>Title</th>
+		<th>Director</th>
+		<th>Year</th>
+	</thead>
+	<tbody id="movie-list">
+		{{#each movies}}
+		<tr>
+			<td>{{title}}</td> 
+			<td>{{director}}</td> 
+			<td>{{year}}</td> 
+		</tr>
+		{{/each}}
+	</tbody>
+</table>
