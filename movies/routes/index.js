@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
 var Movie = mongoose.model('Movie');
-var req = new XMLHttpRequest();
+// var req = new XMLHttpRequest();
 
 router.get('/', function(req, res) {
   res.redirect('/movies');
@@ -19,6 +19,22 @@ router.get('/movies', function(req, res) {
 
   Movie.find(movieFilter, function(err, movies, count) {
     res.render('movies', {'movies': movies, searchExists: searchExists, director: req.query.director });
+  });
+});
+
+
+router.get('/api/movies', function(req, res){
+  var requestObject = {};
+
+  //filter  based on director if filled
+  var director = req.query.director;
+  if(director !== undefined && director !== ""){
+    requestObject['director'] =  director;
+  }
+  //return movies as JSON
+  Movies.find(requestObject, function(err, movies, count){
+    var jsonMovies = JSON.stringify(movies);
+    res.send(jsonMovies);
   });
 });
 
