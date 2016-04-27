@@ -25,7 +25,7 @@ router.get('/movies', function(req, res) {
 
 router.get('/api/movies', function(req, res){
   var requestObject = {};
-
+  console.log("inside api/movies router");
   //filter  based on director if filled
   var director = req.query.director;
   if(director !== undefined && director !== ""){
@@ -34,19 +34,20 @@ router.get('/api/movies', function(req, res){
   //return movies as JSON
   Movies.find(requestObject, function(err, movies, count){
     var jsonMovies = JSON.stringify(movies);
-    res.send(jsonMovies);
+    res.json(jsonMovies);
   });
 });
 
-// router.post('/movies/create', function(req, res) {
-//   (new Movie({
-//       title: req.body.movieTitle,
-//       director: req.body.movieDirector,
-//       year: req.body.movieYear
-//   })).save(function(err, movie, count) {
-//     res.redirect('/movies');
-//   });
-// });
+router.post('/api/movies/create', function(req, res) {
+  (new Movie({
+      title: req.body.movieTitle,
+      director: req.body.movieDirector,
+      year: Number(req.body.movieYear)
+  })).save(function(err, movie, count) {
+    var jsonMovie = JSON.stringify(movie);
+    res.json(jsonMovie);
+  });
+});
 
 // router.get('/movies/create', function(req, res) {
 //   res.render('movies-create', {});
