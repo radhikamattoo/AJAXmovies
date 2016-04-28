@@ -1,3 +1,9 @@
+/*
+ Radhika Mattoo, rm3485@nyu.edu
+ Applied Internet Tech Spring 2016
+ Homework 8
+ */
+
 document.addEventListener('DOMContentLoaded', init);
 
 function init(){
@@ -6,8 +12,9 @@ function init(){
   add();
 }
 
+//function for filter button
 function filter(){
-  //filter button
+  //get button and add event listener
   document.getElementById("filterBtn").addEventListener('click', function(evt){
     //prevent submission
     evt.preventDefault();
@@ -26,20 +33,21 @@ function filter(){
     //make background request
     var req = new XMLHttpRequest();
     req.open('GET', url, true);
+    
     req.addEventListener('load', function(){
       if (req.status >= 200 && req.status < 400) {
-        //FIXME
+
         //parse JSON and replace table elements
          var movies = JSON.parse(req.responseText).movies;
          var table = document.getElementById('movie-list');
-        //  console.log(table.children);
 
          //construct array of new table elements
          var filtered = [];
          for(var i = 0; i < movies.length; i++){
-           var movie = movies[i];
+           var movie = movies[i]; //get movie object for data
            var row = document.createElement('tr');
 
+           //create tabledata elements to go into tablerow
            var title = document.createElement('td');
            var titleText = document.createTextNode(movie.title);
            title.appendChild(titleText);
@@ -55,7 +63,7 @@ function filter(){
            row.appendChild(title);
            row.appendChild(director);
            row.appendChild(year);
-           filtered.push(row);
+           filtered.push(row); //add row to array
          }
 
          //empty out current table and replace with new movies
@@ -66,7 +74,7 @@ function filter(){
         for(var i = 0; i < filtered.length; i++){
           table.appendChild(filtered[i]);
         }
-      }
+      }//end req.status if statement
     }); //end load evt listener
 
     req.addEventListener('error', function(e){
@@ -74,17 +82,17 @@ function filter(){
     }); //end error
 
     req.send();
-  });
+  }); //end filter btn evt listener
 
-}//end filter btn evt listener
+}//end filter function
 
+//function for add button
 function add(){
-  //add
   document.getElementById("addBtn").addEventListener('click', function(evt){
     //prevent submission
     evt.preventDefault();
 
-    //get form data
+    //get form data and construct name=value pairs
     var data = "";
 
     var title = document.getElementById("movieTitle").value;
@@ -92,29 +100,26 @@ function add(){
     var year = document.getElementById("movieYear").value;
 
     data = "movieTitle=" + title + "&movieDirector=" + director + "&movieYear=" + year;
-    // console.log(data);
 
     //make url and request
     var url = "http://localhost:3000/api/movies/create";
     var req = new XMLHttpRequest();
     req.open('POST', url, true);
+
+    //set content type for XMLHttpRequest
     req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
     req.addEventListener('load', function(){
-      //clear text fields for form submission
-      document.querySelector("#movieTitle").innerHTML = "";
-      document.querySelector("#movieDirector").innerHTML = "";
-      document.querySelector("#movieYear").innerHTML = "";
-
-      //repopulate table
+      //get movie object returned from the mongoose save and append to table
       if (req.status >= 200 && req.status < 400) {
         //parse JSON and replace table elements
          var movie = JSON.parse(req.responseText).movies;
 
-         //simulate a click to evt listener button
+         //simulate a click to filter btn to clear filters
          document.getElementById('director').value = "";
          document.getElementById('filterBtn').click();
 
+         //get table object and construct new row to insert
          var table = document.getElementById('movie-list');
          var row = document.createElement('tr');
 
@@ -133,16 +138,15 @@ function add(){
          row.appendChild(title);
          row.appendChild(director);
          row.appendChild(year);
-         table.appendChild(row);
-       }
-    });
+         table.appendChild(row); //can add directly, only 1 movie
+       }//end req.status if
+    });//end load evt listener
+
     req.addEventListener('error', function(){
       document.body.appendChild(document.createTextNode('uh-oh, something went wrong ' + e));
     });
 
     req.send(data);
 
-  });
-
-
-}
+  }); //end add btn evt listener
+}//end add function
