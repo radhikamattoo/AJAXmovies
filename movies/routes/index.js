@@ -25,15 +25,15 @@ router.get('/movies', function(req, res) {
 
 router.get('/api/movies', function(req, res){
   var requestObject = {};
-  console.log("inside api/movies router");
   //filter  based on director if filled
   var director = req.query.director;
   if(director !== undefined && director !== ""){
     requestObject['director'] =  director;
   }
   //return movies as JSON
-  Movies.find(requestObject, function(err, movies, count){
-    var jsonMovies = JSON.stringify(movies);
+  Movie.find(requestObject, function(err, movies, count){
+    var jsonMovies = {movies:movies};
+    console.log(jsonMovies);
     res.json(jsonMovies);
   });
 });
@@ -43,8 +43,8 @@ router.post('/api/movies/create', function(req, res) {
       title: req.body.movieTitle,
       director: req.body.movieDirector,
       year: Number(req.body.movieYear)
-  })).save(function(err, movie, count) {
-    var jsonMovie = JSON.stringify(movie);
+  })).save(function(err, movies, count) {
+    var jsonMovies = {movies:movies};
     res.json(jsonMovie);
   });
 });
