@@ -33,7 +33,6 @@ router.get('/api/movies', function(req, res){
   //return movies as JSON
   Movie.find(requestObject, function(err, movies, count){
     var jsonMovies = {movies:movies};
-    console.log(jsonMovies);
     res.json(jsonMovies);
   });
 });
@@ -44,7 +43,8 @@ router.post('/api/movies/create', function(req, res) {
       director: req.body.movieDirector,
       year: Number(req.body.movieYear)
   })).save(function(err, movies, count) {
-    var jsonMovies = {movies:movies};
+    console.log(movies);
+    var jsonMovie = {movies:movies};
     res.json(jsonMovie);
   });
 });

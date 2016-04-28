@@ -64,6 +64,7 @@ function filter(){
                if(i >= table.children.length){
                  table.appendChild(newRow);
                }else{
+                 var currentRow = table.children[i];
                  table.replaceChild(newRow, currentRow);
                }
              }
@@ -113,20 +114,20 @@ function add(){
     var director = document.getElementById("movieDirector").value;
     var year = document.getElementById("movieYear").value;
 
-    data = "title=" + title + "&director=" + director + "&year=" + year;
-
+    data = "movieTitle=" + title + "&movieDirector=" + director + "&movieYear=" + year;
+    // console.log(data);
 
     //make url and request
     var url = "http://localhost:3000/api/movies/create";
     var req = new XMLHttpRequest();
-    req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     req.open('POST', url, true);
+    req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
     req.addEventListener('load', function(){
       //repopulate table
       if (req.status >= 200 && req.status < 400) {
         //parse JSON and replace table elements
-         var movie = JSON.parse(req.responseText).movies[0]; //can only add 1 movie at a time
+         var movie = JSON.parse(req.responseText).movies;
 
          //simulate a click to evt listener button
          document.getElementById('director').value = "";
@@ -156,6 +157,7 @@ function add(){
     req.addEventListener('error', function(){
       document.body.appendChild(document.createTextNode('uh-oh, something went wrong ' + e));
     });
+
     req.send(data);
 
   });
