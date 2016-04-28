@@ -57,38 +57,15 @@ function filter(){
            row.appendChild(year);
            filtered.push(row);
          }
-         if(table.children.length !== 0 ){ //not an empty table, have to replace
-           if(filtered.length > table.children.length){ //new table will be longer
-             for(var i = 0; i < filtered.length; i++){
-               var newRow = filtered[i];
-               if(i >= table.children.length){
-                 table.appendChild(newRow);
-               }else{
-                 var currentRow = table.children[i];
-                 table.replaceChild(newRow, currentRow);
-               }
-             }
-           }else{ //new table will be shorter or of the same length
-             for(var i = 0; i < table.children.length; i++){
-              //  console.log(i);
-               if(i >= filtered.length){
-                 var remove = table.children[i];
-                //  console.log("Removing ", remove , " at iteration " + i);
-                 table.removeChild(remove);
-               }else{
-                 var theRow = filtered[i];
-                 var currentRow = table.children[i];
-                //  console.log("Appending ", theRow , " at iteration " + i);
-                 table.replaceChild(theRow, currentRow);
-               }
-             }
 
-           }
-         }else{ //empty table! just append to table object
-           filtered.forEach(function(ele){
-             table.appendChild(ele);
-           });
-         }
+         //empty out current table and replace with new movies
+        for(var i = 0; i < table.children.length; i++){
+          var row = table.children[i];
+          row.innerHTML = "";
+        }
+        for(var i = 0; i < filtered.length; i++){
+          table.appendChild(filtered[i]);
+        }
       }
     }); //end load evt listener
 
@@ -124,6 +101,11 @@ function add(){
     req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
     req.addEventListener('load', function(){
+      //clear text fields for form submission
+      document.querySelector("#movieTitle").innerHTML = "";
+      document.querySelector("#movieDirector").innerHTML = "";
+      document.querySelector("#movieYear").innerHTML = "";
+
       //repopulate table
       if (req.status >= 200 && req.status < 400) {
         //parse JSON and replace table elements
@@ -131,7 +113,7 @@ function add(){
 
          //simulate a click to evt listener button
          document.getElementById('director').value = "";
-        document.getElementById('filterBtn').click();
+         document.getElementById('filterBtn').click();
 
          var table = document.getElementById('movie-list');
          var row = document.createElement('tr');
